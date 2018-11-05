@@ -26,15 +26,16 @@ Setup caffe-grl from the following URL: https://github.com/ddtm/caffe/tree/grl
 
       b. for Text, Audio, Video, and 3D model: feature and label, in .lmdb format. Each entry of lmdb includes a feature vector and its label.
    3. One-hot modality labels of target domain(PKU XMedia): the list in .txt format(including one-hot modality labels) under the subfolder "one-hot". The size of this list is (sample number, modality number).
-   For image sample, the one-hot modality label is "1 0 0 0 0".
+   
+      For image sample, the one-hot modality label is "1 0 0 0 0".
 
-   For text sample, the one-hot modality label is "0 1 0 0 0".
+      For text sample, the one-hot modality label is "0 1 0 0 0".
 
-   For audio sample, the one-hot modality label is "0 0 1 0 0".
+      For audio sample, the one-hot modality label is "0 0 1 0 0".
 
-   For video sample, the one-hot modality label is "0 0 0 1 0".
+      For video sample, the one-hot modality label is "0 0 0 1 0".
 
-   For 3D model sample, the one-hot modality label is "0 0 0 0 1".
+      For 3D model sample, the one-hot modality label is "0 0 0 0 1".
 
 4. Training  
  Train network with solver.prototxt and Pre-train model [AlexNet/alexnet_cvgj_wiki.caffemodel](http://www.icst.pku.edu.cn/mipl/tiki-download_file.php?fileId=1005). Remember to set your paths in model/test.prototxt and solver.prototxt
