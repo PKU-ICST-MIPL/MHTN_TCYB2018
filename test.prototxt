@@ -1,0 +1,2029 @@
+name: "TCYB2018"
+layer {
+  name: "imagenet_data"
+  type: "ImageData"
+  top: "imagenet_data"
+  top: "imagenet_label"
+  transform_param {
+    mirror: false
+    crop_size: 224
+  }
+  image_data_param {
+    source: "dataset/ImageNet/train_sample.txt"   #ImageNet List
+    batch_size: 64
+    shuffle: true
+    root_folder: "dataset/ImageNet/train_sample/" #ImageNet folder
+  }
+  include: { phase: TRAIN }
+}
+layer {
+  name: "xmedia_img_data"
+  type: "ImageData"
+  top: "xmedia_img_data"
+  top: "xmedia_img_label"
+  transform_param {
+    mirror: false
+    crop_size: 224
+  }
+  image_data_param {
+    source: "dataset/xmedia/train_img.txt" #XMedia Training Image List
+    batch_size: 64
+    shuffle: false
+    root_folder: "dataset/xmedia/image/" #XMedia image folder
+  }
+  include: { phase: TRAIN }
+}
+layer {
+  name: "xmedia_img_data"
+  type: "ImageData"
+  top: "data"
+  top: "xmedia_img_label"
+  transform_param {
+    mirror: false
+    crop_size: 224
+  }
+  image_data_param {
+    source: "dataset/xmedia/test_img.txt" #XMedia Testing Image List
+    batch_size: 10
+    shuffle: false
+    root_folder: "dataset/xmedia/image/" #XMedia image folder
+  }
+  include: { phase: TEST }
+}
+
+layer {
+  name: "xmedia_txt_data"
+  type: "Data"
+  top: "xmedia_txt_data"
+  top: "xmedia_txt_label"
+  data_param {
+    source: "dataset/xmedia/train_txt_lmdb/" #XMedia Training Text lmdb
+    batch_size: 64
+    backend: LMDB
+  }
+  include: { phase: TRAIN }
+}
+layer {
+  name: "xmedia_txt_data"
+  type: "Data"
+  top: "xmedia_txt_data"
+  top: "xmedia_txt_label"
+  data_param {
+    source: "dataset/xmedia/test_txt_lmdb/" #XMedia Testing Text lmdb
+    batch_size: 10
+    backend: LMDB
+  }
+  include: { phase: TEST }
+}
+
+layer {
+  name: "xmedia_aud_data"
+  type: "Data"
+  top: "xmedia_aud_data"
+  top: "xmedia_aud_label"
+  data_param {
+    source: "dataset/xmedia/train_aud_znorm_lmdb/" #XMedia Training Audio lmdb
+    batch_size: 64
+    backend: LMDB
+  }
+  include: { phase: TRAIN }
+}
+layer {
+  name: "xmedia_aud_data"
+  type: "Data"
+  top: "xmedia_aud_data"
+  top: "xmedia_aud_label"
+  data_param {
+    source: "dataset/xmedia/test_aud_znorm_lmdb/" #XMedia Testing Audio lmdb
+    batch_size: 2
+    backend: LMDB
+  }
+  include: { phase: TEST }
+}
+
+layer {
+  name: "xmedia_vid_data"
+  type: "Data"
+  top: "xmedia_vid_data"
+  top: "xmedia_vid_label"
+  data_param {
+    source: "dataset/xmedia/train_vid_lmdb/" #XMedia Training Video lmdb
+    batch_size: 64
+    backend: LMDB
+  }
+  include: { phase: TRAIN }
+}
+layer {
+  name: "xmedia_vid_data"
+  type: "Data"
+  top: "xmedia_vid_data"
+  top: "xmedia_vid_label"
+  data_param {
+    source: "dataset/xmedia/test_vid_lmdb/" #XMedia Testing Video lmdb
+    batch_size: 1
+    backend: LMDB
+  }
+  include: { phase: TEST }
+}
+
+layer {
+  name: "xmedia_3d_data"
+  type: "Data"
+  top: "xmedia_3d_data"
+  top: "xmedia_3d_label"
+  data_param {
+    source: "dataset/xmedia/train_3d_lmdb/" #XMedia Training 3D Model lmdb
+    batch_size: 64
+    backend: LMDB
+  }
+  include: { phase: TRAIN }
+}
+layer {
+  name: "xmedia_3d_data"
+  type: "Data"
+  top: "xmedia_3d_data"
+  top: "xmedia_3d_label"
+  data_param {
+    source: "dataset/xmedia/test_3d_lmdb/" #XMedia Testing 3D Model lmdb
+    batch_size: 1
+    backend: LMDB
+  }
+  include: { phase: TEST }
+}
+
+layer {
+  name: "similarity"
+  type: "DummyData"
+  top: "similarity"
+  dummy_data_param {
+    data_filler {
+      type: "constant"
+      value: 1
+    }
+    num: 64
+    channels: 1
+    height: 1
+    width: 1
+  }
+  include: { phase: TRAIN }
+}
+
+layer {
+  name: "xmedia_img_modal_label"
+  type: "Data"
+  top: "xmedia_img_modal_label"
+  top: "xmedia_img_modal_label_none"
+  data_param {
+    source: "dataset/xmedia/one-hot/train_img_onehot_lmdb/" #XMedia Training Image Modality Labels lmdb
+    batch_size: 64
+    backend: LMDB
+  }
+  include: { phase: TRAIN }
+}
+layer {
+  name: "xmedia_img_modal_label_none_silence"
+  type: "Silence"
+  bottom: "xmedia_img_modal_label_none"
+  include: { phase: TRAIN }
+}
+layer {
+  name: "xmedia_txt_modal_label"
+  type: "Data"
+  top: "xmedia_txt_modal_label"
+  top: "xmedia_txt_modal_label_none"
+  data_param {
+    source: "dataset/xmedia/one-hot/train_txt_onehot_lmdb/" #XMedia Training Text Modality Labels lmdb
+    batch_size: 64
+    backend: LMDB
+  }
+  include: { phase: TRAIN }
+}
+layer {
+  name: "xmedia_txt_modal_label_none_silence"
+  type: "Silence"
+  bottom: "xmedia_txt_modal_label_none"
+  include: { phase: TRAIN }
+}
+layer {
+  name: "xmedia_aud_modal_label"
+  type: "Data"
+  top: "xmedia_aud_modal_label"
+  top: "xmedia_aud_modal_label_none"
+  data_param {
+    source: "dataset/xmedia/one-hot/train_aud_onehot_lmdb/" #XMedia Training Audio Modality Labels lmdb
+    batch_size: 64
+    backend: LMDB
+  }
+  include: { phase: TRAIN }
+}
+layer {
+  name: "xmedia_aud_modal_label_none_silence"
+  type: "Silence"
+  bottom: "xmedia_aud_modal_label_none"
+  include: { phase: TRAIN }
+}
+layer {
+  name: "xmedia_vid_modal_label"
+  type: "Data"
+  top: "xmedia_vid_modal_label"
+  top: "xmedia_vid_modal_label_none"
+  data_param {
+    source: "dataset/xmedia/one-hot/train_vid_onehot_lmdb/" #XMedia Training Video Modality Labels lmdb
+    batch_size: 64
+    backend: LMDB
+  }
+  include: { phase: TRAIN }
+}
+layer {
+  name: "xmedia_vid_modal_label_none_silence"
+  type: "Silence"
+  bottom: "xmedia_vid_modal_label_none"
+  include: { phase: TRAIN }
+}
+layer {
+  name: "xmedia_3d_modal_label"
+  type: "Data"
+  top: "xmedia_3d_modal_label"
+  top: "xmedia_3d_modal_label_none"
+  data_param {
+    source: "dataset/xmedia/one-hot/train_3d_onehot_lmdb/" #XMedia Training 3D Model Modality Labels lmdb
+    batch_size: 64
+    backend: LMDB
+  }
+  include: { phase: TRAIN }
+}
+layer {
+  name: "xmedia_3d_modal_label_none_silence"
+  type: "Silence"
+  bottom: "xmedia_3d_modal_label_none"
+  include: { phase: TRAIN }
+}
+layer {
+  name: "concat_modal_label"
+  type: "Concat"
+  bottom: "xmedia_img_modal_label"
+  bottom: "xmedia_txt_modal_label"
+  bottom: "xmedia_aud_modal_label"
+  bottom: "xmedia_vid_modal_label"
+  bottom: "xmedia_3d_modal_label"
+  top: "xmedia_modal_label"
+  concat_param {
+    concat_dim: 0
+  }
+  include: { phase: TRAIN }
+}
+
+# ---------------------------------------------------------- source and target data concatenation
+
+layer {
+  name: "concat_data"
+  type: "Concat"
+  bottom: "imagenet_data"
+  bottom: "xmedia_img_data"
+  top: "data"
+  concat_param {
+    concat_dim: 0
+  }
+  include: { phase: TRAIN }
+}
+
+# ---------------------------------------------------------- convolution
+
+layer {
+  name: "data/bn"
+  type: "BatchNorm"
+  bottom: "data"
+  top: "data/bn"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  batch_norm_param {
+    moving_average_fraction: 0.9
+  }
+}
+layer {
+  name: "data/scale"
+  type: "Scale"
+  bottom: "data/bn"
+  top: "data/scale"
+  param {
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "conv1"
+  type: "Convolution"
+  bottom: "data/scale"
+  top: "conv1"
+  param {
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 96
+    kernel_size: 11
+    stride: 4
+    weight_filler {
+      type: "msra"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+  }
+}
+layer {
+  name: "conv1/bn"
+  type: "BatchNorm"
+  bottom: "conv1"
+  top: "conv1/bn"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  batch_norm_param {
+    moving_average_fraction: 0.9
+  }
+}
+layer {
+  name: "relu1"
+  type: "ReLU"
+  bottom: "conv1/bn"
+  top: "norm1"
+}
+layer {
+  name: "pool1"
+  type: "Pooling"
+  bottom: "norm1"
+  top: "pool1"
+  pooling_param {
+    pool: MAX
+    kernel_size: 3
+    stride: 2
+  }
+}
+layer {
+  name: "conv2"
+  type: "Convolution"
+  bottom: "pool1"
+  top: "conv2"
+  param {
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 256
+    pad: 2
+    kernel_size: 5
+    group: 2
+    weight_filler {
+      type: "msra"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+  }
+}
+layer {
+  name: "conv2/bn"
+  type: "BatchNorm"
+  bottom: "conv2"
+  top: "conv2/bn"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  batch_norm_param {
+    moving_average_fraction: 0.9
+  }
+}
+layer {
+  name: "relu2"
+  type: "ReLU"
+  bottom: "conv2/bn"
+  top: "norm2"
+}
+layer {
+  name: "pool2"
+  type: "Pooling"
+  bottom: "norm2"
+  top: "pool2"
+  pooling_param {
+    pool: MAX
+    kernel_size: 3
+    stride: 2
+  }
+}
+layer {
+  name: "conv3"
+  type: "Convolution"
+  bottom: "pool2"
+  top: "conv3"
+  param {
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 384
+    pad: 1
+    kernel_size: 3
+    weight_filler {
+      type: "msra"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+  }
+}
+layer {
+  name: "conv3/bn"
+  type: "BatchNorm"
+  bottom: "conv3"
+  top: "conv3/bn"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  batch_norm_param {
+    moving_average_fraction: 0.9
+  }
+}
+layer {
+  name: "relu3"
+  type: "ReLU"
+  bottom: "conv3/bn"
+  top: "conv3/bn"
+}
+layer {
+  name: "conv4"
+  type: "Convolution"
+  bottom: "conv3/bn"
+  top: "conv4"
+  param {
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 384
+    pad: 1
+    kernel_size: 3
+    group: 2
+    weight_filler {
+      type: "msra"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+  }
+}
+layer {
+  name: "conv4/bn"
+  type: "BatchNorm"
+  bottom: "conv4"
+  top: "conv4/bn"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  batch_norm_param {
+    moving_average_fraction: 0.9
+  }
+}
+layer {
+  name: "relu4"
+  type: "ReLU"
+  bottom: "conv4/bn"
+  top: "conv4/bn"
+}
+layer {
+  name: "conv5"
+  type: "Convolution"
+  bottom: "conv4/bn"
+  top: "conv5"
+  param {
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 256
+    pad: 1
+    kernel_size: 3
+    group: 2
+    weight_filler {
+      type: "msra"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+  }
+}
+layer {
+  name: "conv5/bn"
+  type: "BatchNorm"
+  bottom: "conv5"
+  top: "conv5/bn"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  batch_norm_param {
+    moving_average_fraction: 0.9
+  }
+}
+layer {
+  name: "relu5"
+  type: "ReLU"
+  bottom: "conv5/bn"
+  top: "conv5/bn"
+}
+layer {
+  name: "pool5"
+  type: "Pooling"
+  bottom: "conv5/bn"
+  top: "pool5"
+  pooling_param {
+    pool: MAX
+    kernel_size: 3
+    stride: 2
+  }
+}
+
+# ---------------------------------------------------------- alias pool5 to xmedia_img_pool5 in test
+
+layer {
+  name: "pool5_alias"
+  type: "Split"
+  bottom: "pool5"
+  top: "xmedia_img_pool5"
+  include: { phase: TEST }
+}
+
+# ---------------------------------------------------------- split source and target in train
+
+layer {
+  name: "slice_pool5"
+  type: "Slice"
+  bottom: "pool5"
+  top: "imagenet_pool5"
+  top: "xmedia_img_pool5"
+  slice_param {
+    slice_dim: 0
+  }
+  include: { phase: TRAIN }
+}
+
+# ---------------------------------------------------------- fc6 of source
+
+layer {
+  name: "fc6"
+  type: "InnerProduct"
+  bottom: "imagenet_pool5"
+  top: "fc6"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 4096
+    weight_filler {
+      type: "msra"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+  }
+  include: { phase: TRAIN }
+}
+layer {
+  name: "fc6/bn"
+  type: "BatchNorm"
+  bottom: "fc6"
+  top: "fc6/bn"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  batch_norm_param {
+    moving_average_fraction: 0.9
+  }
+  include: { phase: TRAIN }
+}
+layer {
+  name: "relu6"
+  type: "ReLU"
+  bottom: "fc6/bn"
+  top: "fc6/bn"
+  include: { phase: TRAIN }
+}
+layer {
+  name: "fc7"
+  type: "InnerProduct"
+  bottom: "fc6/bn"
+  top: "fc7"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 4096
+    weight_filler {
+      type: "msra"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+  }
+  include: { phase: TRAIN }
+}
+layer {
+  name: "fc7/bn"
+  type: "BatchNorm"
+  bottom: "fc7"
+  top: "fc7/bn"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  batch_norm_param {
+    moving_average_fraction: 0.9
+  }
+  include: { phase: TRAIN }
+}
+layer {
+  name: "relu7"
+  type: "ReLU"
+  bottom: "fc7/bn"
+  top: "fc7/bn"
+  include: { phase: TRAIN }
+}  
+layer {
+  name: "fc8"
+  type: "InnerProduct"
+  bottom: "fc7/bn"
+  top: "fc8"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 1000
+    weight_filler {
+      type: "msra"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+  }
+  include: { phase: TRAIN }
+}
+
+# ---------------------------------------------------------- fc6 of target
+
+layer {
+  name: "xmedia_img_fc6"
+  type: "InnerProduct"
+  bottom: "xmedia_img_pool5"
+  top: "xmedia_img_fc6"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 4096
+    weight_filler {
+      type: "msra"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+  }
+}
+layer {
+  name: "xmedia_img_fc6/bn"
+  type: "BatchNorm"
+  bottom: "xmedia_img_fc6"
+  top: "xmedia_img_fc6/bn"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  batch_norm_param {
+    moving_average_fraction: 0.9
+  }
+}
+layer {
+  name: "xmedia_img_relu6"
+  type: "ReLU"
+  bottom: "xmedia_img_fc6/bn"
+  top: "xmedia_img_fc6/bn"
+}
+
+
+layer {
+  name: "xmedia_img_fc7"
+  type: "InnerProduct"
+  bottom: "xmedia_img_fc6/bn"
+  top: "xmedia_img_fc7"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 4096
+    weight_filler {
+      type: "msra"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+  }
+}
+layer {
+  name: "xmedia_img_fc7/bn"
+  type: "BatchNorm"
+  bottom: "xmedia_img_fc7"
+  top: "xmedia_img_fc7/bn"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  batch_norm_param {
+    moving_average_fraction: 0.9
+  }
+}
+layer {
+  name: "xmedia_img_relu7"
+  type: "ReLU"
+  bottom: "xmedia_img_fc7/bn"
+  top: "xmedia_img_fc7/bn"
+}
+
+# ---------------------------------------------------------- txtNet
+
+layer {
+  name: "xmedia_txt_data/bn"
+  type: "BatchNorm"
+  bottom: "xmedia_txt_data"
+  top: "xmedia_txt_data/bn"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  batch_norm_param {
+    moving_average_fraction: 0.9
+  }
+}
+layer {
+  name: "xmedia_txt_data/scale"
+  type: "Scale"
+  bottom: "xmedia_txt_data/bn"
+  top: "xmedia_txt_data/scale"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "xmedia_txt_fc6"
+  type: "InnerProduct"
+  bottom: "xmedia_txt_data/scale"
+  top: "xmedia_txt_fc6"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 4096
+    weight_filler {
+      type: "msra"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+  }
+}
+layer {
+  name: "xmedia_txt_fc6/bn"
+  type: "BatchNorm"
+  bottom: "xmedia_txt_fc6"
+  top: "xmedia_txt_fc6/bn"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  batch_norm_param {
+    moving_average_fraction: 0.9
+  }
+}
+layer {
+  name: "xmedia_txt_relu6"
+  type: "ReLU"
+  bottom: "xmedia_txt_fc6/bn"
+  top: "xmedia_txt_fc6/bn"
+}
+layer {
+  name: "xmedia_txt_fc7"
+  type: "InnerProduct"
+  bottom: "xmedia_txt_fc6/bn"
+  top: "xmedia_txt_fc7"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 4096
+    weight_filler {
+      type: "msra"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+  }
+}
+layer {
+  name: "xmedia_txt_fc7/bn"
+  type: "BatchNorm"
+  bottom: "xmedia_txt_fc7"
+  top: "xmedia_txt_fc7/bn"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  batch_norm_param {
+    moving_average_fraction: 0.9
+  }
+}
+layer {
+  name: "xmedia_txt_relu7"
+  type: "ReLU"
+  bottom: "xmedia_txt_fc7/bn"
+  top: "xmedia_txt_fc7/bn"
+}
+
+# ---------------------------------------------------------- audNet
+
+layer {
+  name: "xmedia_aud_data/bn"
+  type: "BatchNorm"
+  bottom: "xmedia_aud_data"
+  top: "xmedia_aud_data/bn"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  batch_norm_param {
+    moving_average_fraction: 0.9
+  }
+}
+layer {
+  name: "xmedia_aud_data/scale"
+  type: "Scale"
+  bottom: "xmedia_aud_data/bn"
+  top: "xmedia_aud_data/scale"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "xmedia_aud_fc6"
+  type: "InnerProduct"
+  bottom: "xmedia_aud_data/scale"
+  top: "xmedia_aud_fc6"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 4096
+    weight_filler {
+      type: "msra"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+  }
+}
+layer {
+  name: "xmedia_aud_fc6/bn"
+  type: "BatchNorm"
+  bottom: "xmedia_aud_fc6"
+  top: "xmedia_aud_fc6/bn"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  batch_norm_param {
+    moving_average_fraction: 0.9
+  }
+}
+layer {
+  name: "xmedia_aud_relu6"
+  type: "ReLU"
+  bottom: "xmedia_aud_fc6/bn"
+  top: "xmedia_aud_fc6/bn"
+}
+layer {
+  name: "xmedia_aud_fc7"
+  type: "InnerProduct"
+  bottom: "xmedia_aud_fc6/bn"
+  top: "xmedia_aud_fc7"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 4096
+    weight_filler {
+      type: "msra"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+  }
+}
+layer {
+  name: "xmedia_aud_fc7/bn"
+  type: "BatchNorm"
+  bottom: "xmedia_aud_fc7"
+  top: "xmedia_aud_fc7/bn"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  batch_norm_param {
+    moving_average_fraction: 0.9
+  }
+}
+layer {
+  name: "xmedia_aud_relu7"
+  type: "ReLU"
+  bottom: "xmedia_aud_fc7/bn"
+  top: "xmedia_aud_fc7/bn"
+}
+
+# ---------------------------------------------------------- vidNet
+
+layer {
+  name: "xmedia_vid_data/bn"
+  type: "BatchNorm"
+  bottom: "xmedia_vid_data"
+  top: "xmedia_vid_data/bn"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  batch_norm_param {
+    moving_average_fraction: 0.9
+  }
+}
+layer {
+  name: "xmedia_vid_data/scale"
+  type: "Scale"
+  bottom: "xmedia_vid_data/bn"
+  top: "xmedia_vid_data/scale"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "xmedia_vid_fc6"
+  type: "InnerProduct"
+  bottom: "xmedia_vid_data/scale"
+  top: "xmedia_vid_fc6"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 4096
+    weight_filler {
+      type: "msra"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+  }
+}
+layer {
+  name: "xmedia_vid_fc6/bn"
+  type: "BatchNorm"
+  bottom: "xmedia_vid_fc6"
+  top: "xmedia_vid_fc6/bn"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  batch_norm_param {
+    moving_average_fraction: 0.9
+  }
+}
+layer {
+  name: "xmedia_vid_relu6"
+  type: "ReLU"
+  bottom: "xmedia_vid_fc6/bn"
+  top: "xmedia_vid_fc6/bn"
+}
+layer {
+  name: "xmedia_vid_fc7"
+  type: "InnerProduct"
+  bottom: "xmedia_vid_fc6/bn"
+  top: "xmedia_vid_fc7"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 4096
+    weight_filler {
+      type: "msra"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+  }
+}
+layer {
+  name: "xmedia_vid_fc7/bn"
+  type: "BatchNorm"
+  bottom: "xmedia_vid_fc7"
+  top: "xmedia_vid_fc7/bn"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  batch_norm_param {
+    moving_average_fraction: 0.9
+  }
+}
+layer {
+  name: "xmedia_vid_relu7"
+  type: "ReLU"
+  bottom: "xmedia_vid_fc7/bn"
+  top: "xmedia_vid_fc7/bn"
+}
+
+# ---------------------------------------------------------- 3dNet
+
+layer {
+  name: "xmedia_3d_data/bn"
+  type: "BatchNorm"
+  bottom: "xmedia_3d_data"
+  top: "xmedia_3d_data/bn"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  batch_norm_param {
+    moving_average_fraction: 0.9
+  }
+}
+layer {
+  name: "xmedia_3d_data/scale"
+  type: "Scale"
+  bottom: "xmedia_3d_data/bn"
+  top: "xmedia_3d_data/scale"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  scale_param {
+    bias_term: true
+  }
+}
+layer {
+  name: "xmedia_3d_fc6"
+  type: "InnerProduct"
+  bottom: "xmedia_3d_data/scale"
+  top: "xmedia_3d_fc6"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 4096
+    weight_filler {
+      type: "msra"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+  }
+}
+layer {
+  name: "xmedia_3d_fc6/bn"
+  type: "BatchNorm"
+  bottom: "xmedia_3d_fc6"
+  top: "xmedia_3d_fc6/bn"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  batch_norm_param {
+    moving_average_fraction: 0.9
+  }
+}
+layer {
+  name: "xmedia_3d_relu6"
+  type: "ReLU"
+  bottom: "xmedia_3d_fc6/bn"
+  top: "xmedia_3d_fc6/bn"
+}
+layer {
+  name: "xmedia_3d_fc7"
+  type: "InnerProduct"
+  bottom: "xmedia_3d_fc6/bn"
+  top: "xmedia_3d_fc7"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 4096
+    weight_filler {
+      type: "msra"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+  }
+}
+layer {
+  name: "xmedia_3d_fc7/bn"
+  type: "BatchNorm"
+  bottom: "xmedia_3d_fc7"
+  top: "xmedia_3d_fc7/bn"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  batch_norm_param {
+    moving_average_fraction: 0.9
+  }
+}
+layer {
+  name: "xmedia_3d_relu7"
+  type: "ReLU"
+  bottom: "xmedia_3d_fc7/bn"
+  top: "xmedia_3d_fc7/bn"
+}
+
+# ---------------------------------------------------------- mergeNet
+
+layer {
+  name: "xmedia_fc7"
+  type: "Concat"
+  bottom: "xmedia_img_fc7/bn"
+  bottom: "xmedia_txt_fc7/bn"
+  bottom: "xmedia_aud_fc7/bn"
+  bottom: "xmedia_vid_fc7/bn"
+  bottom: "xmedia_3d_fc7/bn"
+  top: "xmedia_fc7/bn"
+  concat_param {
+    concat_dim: 0
+  }
+}
+
+layer {
+  name: "xmedia_fc8"
+  type: "InnerProduct"
+  bottom: "xmedia_fc7/bn"
+  top: "xmedia_fc8"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 4096
+    weight_filler {
+      type: "msra"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+  }
+}
+layer {
+  name: "xmedia_fc8/bn"
+  type: "BatchNorm"
+  bottom: "xmedia_fc8"
+  top: "xmedia_fc8/bn"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  batch_norm_param {
+    moving_average_fraction: 0.9
+  }
+}
+layer {
+  name: "xmedia_relu8"
+  type: "ReLU"
+  bottom: "xmedia_fc8/bn"
+  top: "xmedia_fc8/bn"
+}
+layer {
+  name: "xmedia_fc9"
+  type: "InnerProduct"
+  bottom: "xmedia_fc8/bn"
+  top: "xmedia_fc9"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 4096
+    weight_filler {
+      type: "msra"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+  }
+}
+layer {
+  name: "xmedia_fc9/bn"
+  type: "BatchNorm"
+  bottom: "xmedia_fc9"
+  top: "xmedia_fc9/bn"
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  param {
+    lr_mult: 0
+    decay_mult: 0
+  }
+  batch_norm_param {
+    moving_average_fraction: 0.9
+  }
+}
+layer {
+  name: "xmedia_relu9"
+  type: "ReLU"
+  bottom: "xmedia_fc9/bn"
+  top: "xmedia_fc9/bn"
+}
+layer {
+  name: "xmedia_fc10"
+  type: "InnerProduct"
+  bottom: "xmedia_fc9/bn"
+  top: "xmedia_fc10"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 20
+    weight_filler {
+      type: "msra"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+  }
+}
+
+layer {
+  name: "slice_fc10"
+  type: "Slice"
+  bottom: "xmedia_fc10"
+  top: "xmedia_img_fc10"
+  top: "xmedia_txt_fc10"
+  top: "xmedia_aud_fc10"
+  top: "xmedia_vid_fc10"
+  top: "xmedia_3d_fc10"
+  slice_param {
+    slice_dim: 0
+    slice_point: 64
+    slice_point: 128
+    slice_point: 192
+    slice_point: 256
+  }
+  include: { phase: TRAIN }
+}
+layer {
+  name: "slice_fc10"
+  type: "Slice"
+  bottom: "xmedia_fc10"
+  top: "xmedia_img_fc10"
+  top: "xmedia_txt_fc10"
+  top: "xmedia_aud_fc10"
+  top: "xmedia_vid_fc10"
+  top: "xmedia_3d_fc10"
+  slice_param {
+    slice_dim: 0
+    slice_point: 10
+    slice_point: 20
+    slice_point: 22
+    slice_point: 23
+  }
+  include: { phase: TEST }
+}
+
+# ---------------------------------------------------------- Gradient reversal
+
+layer {
+  name: "bottleneck"
+  type: "InnerProduct"
+  bottom: "xmedia_fc9"
+  top: "bottleneck"
+  param {
+    lr_mult: 0.1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 0.2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 512
+    weight_filler {
+      type: "msra"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+  }
+  include: { phase: TRAIN }
+}
+layer {
+  name: "grl"
+  type: "GradientScaler"
+  bottom: "bottleneck"
+  top: "grl"
+  gradient_scaler_param {
+    lower_bound: 0.0
+    upper_bound: 100000.0
+    alpha: -0.5
+    max_iter: 5000
+  }
+  include: { phase: TRAIN }
+}
+
+# ---------------------------------------------------------- Modal classifier
+
+layer {
+  name: "xmedia_mc_fc1"
+  type: "InnerProduct"
+  bottom: "grl"
+  top: "xmedia_mc_fc1"
+  param {
+    lr_mult: 0.1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 0.2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 1024
+    weight_filler {
+      type: "msra"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+  }
+  include: { phase: TRAIN }
+}
+layer {
+  name: "xmedia_mc_relu1"
+  type: "ReLU"
+  bottom: "xmedia_mc_fc1"
+  top: "xmedia_mc_fc1"
+  include: { phase: TRAIN }
+}
+layer {
+  name: "xmedia_mc_fc2"
+  type: "InnerProduct"
+  bottom: "xmedia_mc_fc1"
+  top: "xmedia_mc_fc2"
+  param {
+    lr_mult: 0.1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 0.2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 1024
+    weight_filler {
+      type: "msra"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+  }
+  include: { phase: TRAIN }
+}
+layer {
+  name: "xmedia_mc_relu2"
+  type: "ReLU"
+  bottom: "xmedia_mc_fc2"
+  top: "xmedia_mc_fc2"
+  include: { phase: TRAIN }
+}
+layer {
+  name: "xmedia_mc_fc3"
+  type: "InnerProduct"
+  bottom: "xmedia_mc_fc2"
+  top: "xmedia_mc_fc3"
+  param {
+    lr_mult: 0.1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 0.2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 5
+    weight_filler {
+      type: "msra"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+  }
+  include: { phase: TRAIN }
+}
+
+# ---------------------------------------------------------- accuracy
+
+layer {
+  name: "imagenet_accuracy"
+  type: "Accuracy"
+  bottom: "fc8"
+  bottom: "imagenet_label"
+  top: "imagenet_accuracy"
+  include: { phase: TRAIN }
+}
+
+layer {
+  name: "xmedia_img_accuracy"
+  type: "Accuracy"
+  bottom: "xmedia_img_fc10"
+  bottom: "xmedia_img_label"
+  top: "xmedia_img_accuracy"
+}
+layer {
+  name: "xmedia_txt_accuracy"
+  type: "Accuracy"
+  bottom: "xmedia_txt_fc10"
+  bottom: "xmedia_txt_label"
+  top: "xmedia_txt_accuracy"
+}
+layer {
+  name: "xmedia_aud_accuracy"
+  type: "Accuracy"
+  bottom: "xmedia_aud_fc10"
+  bottom: "xmedia_aud_label"
+  top: "xmedia_aud_accuracy"
+}
+layer {
+  name: "xmedia_vid_accuracy"
+  type: "Accuracy"
+  bottom: "xmedia_vid_fc10"
+  bottom: "xmedia_vid_label"
+  top: "xmedia_vid_accuracy"
+}
+layer {
+  name: "xmedia_3d_accuracy"
+  type: "Accuracy"
+  bottom: "xmedia_3d_fc10"
+  bottom: "xmedia_3d_label"
+  top: "xmedia_3d_accuracy"
+}
+
+# ---------------------------------------------------------- softmax loss
+
+layer {
+  name: "imagenet_softmax_loss"
+  type: "SoftmaxWithLoss"
+  bottom: "fc8"
+  bottom: "imagenet_label"
+  top: "imagenet_softmax_loss"
+  include: { phase: TRAIN }
+}
+layer {
+  name: "xmedia_img_softmax_loss"
+  type: "SoftmaxWithLoss"
+  bottom: "xmedia_img_fc10"
+  bottom: "xmedia_img_label"
+  top: "xmedia_img_softmax_loss"
+  include: { phase: TRAIN }
+}
+layer {
+  name: "xmedia_txt_loss"
+  type: "SoftmaxWithLoss"
+  bottom: "xmedia_txt_fc10"
+  bottom: "xmedia_txt_label"
+  top: "xmedia_txt_loss"
+  include: { phase: TRAIN }
+}
+layer {
+  name: "xmedia_aud_loss"
+  type: "SoftmaxWithLoss"
+  bottom: "xmedia_aud_fc10"
+  bottom: "xmedia_aud_label"
+  top: "xmedia_aud_loss"
+  include: { phase: TRAIN }
+}
+layer {
+  name: "xmedia_vid_loss"
+  type: "SoftmaxWithLoss"
+  bottom: "xmedia_vid_fc10"
+  bottom: "xmedia_vid_label"
+  top: "xmedia_vid_loss"
+  include: { phase: TRAIN }
+}
+layer {
+  name: "xmedia_3d_loss"
+  type: "SoftmaxWithLoss"
+  bottom: "xmedia_3d_fc10"
+  bottom: "xmedia_3d_label"
+  top: "xmedia_3d_loss"
+  include: { phase: TRAIN }
+}
+
+# ---------------------------------------------------------- mmd loss of fc6 and fc7
+
+layer {
+  name: "imagenet_xmedia_mmd_loss_fc6"
+  type: "MMDLoss"
+  bottom: "fc6/bn"
+  bottom: "xmedia_img_fc6/bn"
+  top: "imagenet_xmedia_mmd_loss_fc6"
+  loss_weight: 1
+  mmd_param {
+    kernel_num: 1
+    kernel_mul: 2.0
+    fix_gamma: false
+  }
+  include: { phase: TRAIN }
+}
+layer {
+  name: "imagenet_xmedia_mmd_loss_fc7"
+  type: "MMDLoss"
+  bottom: "fc7/bn"
+  bottom: "xmedia_img_fc7/bn"
+  top: "imagenet_xmedia_mmd_loss_fc7"
+  loss_weight: 1
+  mmd_param {
+    kernel_num: 1
+    kernel_mul: 2.0
+    fix_gamma: false
+  }
+  include: { phase: TRAIN }
+}
+
+# ---------------------------------------------------------- cross-modal loss of fc6 fc7 and fc8
+
+layer {
+  name: "fc6_txt_contrastive_loss" 
+  type: "ContrastiveLoss" 
+  bottom: "xmedia_img_fc6/bn" 
+  bottom: "xmedia_txt_fc6/bn"
+  bottom: "similarity"
+  top: "fc6_txt_contrastive_loss"
+  loss_weight: 0.001
+  include: { phase: TRAIN }
+}
+layer {
+  name: "fc7_txt_contrastive_loss" 
+  type: "ContrastiveLoss" 
+  bottom: "xmedia_img_fc7/bn" 
+  bottom: "xmedia_txt_fc7/bn"
+  bottom: "similarity"
+  top: "fc7_txt_contrastive_loss"
+  loss_weight: 0.001
+  include: { phase: TRAIN }
+}
+
+layer {
+  name: "fc6_aud_contrastive_loss" 
+  type: "ContrastiveLoss" 
+  bottom: "xmedia_img_fc6/bn" 
+  bottom: "xmedia_aud_fc6/bn"
+  bottom: "similarity"
+  top: "fc6_aud_contrastive_loss"
+  loss_weight: 0.001
+  include: { phase: TRAIN }
+}
+layer {
+  name: "fc7_aud_contrastive_loss" 
+  type: "ContrastiveLoss" 
+  bottom: "xmedia_img_fc7/bn" 
+  bottom: "xmedia_aud_fc7/bn"
+  bottom: "similarity"
+  top: "fc7_aud_contrastive_loss"
+  loss_weight: 0.001
+  include: { phase: TRAIN }
+}
+
+layer {
+  name: "fc6_vid_contrastive_loss" 
+  type: "ContrastiveLoss" 
+  bottom: "xmedia_img_fc6/bn" 
+  bottom: "xmedia_vid_fc6/bn"
+  bottom: "similarity"
+  top: "fc6_vid_contrastive_loss"
+  loss_weight: 0.001
+  include: { phase: TRAIN }
+}
+layer {
+  name: "fc7_vid_contrastive_loss" 
+  type: "ContrastiveLoss" 
+  bottom: "xmedia_img_fc7/bn" 
+  bottom: "xmedia_vid_fc7/bn"
+  bottom: "similarity"
+  top: "fc7_vid_contrastive_loss"
+  loss_weight: 0.001
+  include: { phase: TRAIN }
+}
+
+layer {
+  name: "fc6_3d_contrastive_loss" 
+  type: "ContrastiveLoss" 
+  bottom: "xmedia_img_fc6/bn" 
+  bottom: "xmedia_3d_fc6/bn"
+  bottom: "similarity"
+  top: "fc6_3d_contrastive_loss"
+  loss_weight: 0.001
+  include: { phase: TRAIN }
+}
+layer {
+  name: "fc7_3d_contrastive_loss" 
+  type: "ContrastiveLoss" 
+  bottom: "xmedia_img_fc7/bn" 
+  bottom: "xmedia_3d_fc7/bn"
+  bottom: "similarity"
+  top: "fc7_3d_contrastive_loss"
+  loss_weight: 0.001
+  include: { phase: TRAIN }
+}
+
+layer {
+  bottom: "xmedia_img_fc10"
+  top: "xmedia_img_prob"
+  name: "xmedia_img_prob"
+  type: "Softmax"
+}
+layer {
+  bottom: "xmedia_txt_fc10"
+  top: "xmedia_txt_prob"
+  name: "xmedia_txt_prob"
+  type: "Softmax"
+}
+layer {
+  bottom: "xmedia_aud_fc10"
+  top: "xmedia_aud_prob"
+  name: "xmedia_aud_prob"
+  type: "Softmax"
+}
+layer {
+  bottom: "xmedia_vid_fc10"
+  top: "xmedia_vid_prob"
+  name: "xmedia_vid_prob"
+  type: "Softmax"
+}
+layer {
+  bottom: "xmedia_3d_fc10"
+  top: "xmedia_3d_prob"
+  name: "xmedia_3d_prob"
+  type: "Softmax"
+}
+

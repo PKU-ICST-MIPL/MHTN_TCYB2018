@@ -1,0 +1,15 @@
+test_iter: 100
+test_interval: 100
+base_lr: 0.01
+display: 500
+max_iter: 11000
+lr_policy: "fixed"
+power: 1
+momentum: 0.9
+weight_decay: 0.0005
+snapshot: 11000
+snapshot_prefix: "model/xmedia"
+random_seed: 0
+net: "model.prototxt"
+test_initialization: false
+iter_size: 16 
